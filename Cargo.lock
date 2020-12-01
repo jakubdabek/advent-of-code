@@ -10,6 +10,7 @@ version = "0.1.0"
 dependencies = [
  "aoc-runner",
  "aoc-runner-derive",
+ "aoc-utils",
 ]
 
 [[package]]
@@ -40,6 +41,10 @@ dependencies = [
  "serde_derive",
  "serde_json",
 ]
+
+[[package]]
+name = "aoc-utils"
+version = "0.1.0"
 
 [[package]]
 name = "itoa"

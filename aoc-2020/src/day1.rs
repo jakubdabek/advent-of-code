@@ -1,12 +1,10 @@
 use aoc_runner_derive::{aoc, aoc_generator};
+use aoc_utils::parse_lines;
 use std::collections::HashSet;
 
 #[aoc_generator(day1)]
 pub fn generate(s: &str) -> Vec<i32> {
-    s.lines()
-        .map(str::parse)
-        .collect::<Result<Vec<_>, _>>()
-        .expect("couldn't parse number")
+    parse_lines(s).expect("couldn't parse input")
 }
 
 #[aoc(day1, part1, online)]
