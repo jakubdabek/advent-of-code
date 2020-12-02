@@ -4,23 +4,23 @@ use std::convert::{TryFrom, TryInto};
 use std::ops::RangeInclusive;
 
 #[derive(Debug)]
-struct Line<'a> {
+pub struct Line {
     range: RangeInclusive<u8>,
     letter: u8,
-    password: &'a [u8],
+    password: Vec<u8>,
 }
 
-impl<'a> TryFrom<&'a str> for Line<'a> {
+impl TryFrom<&str> for Line {
     type Error = ();
 
-    fn try_from(s: &'a str) -> Result<Self, Self::Error> {
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
         let mut s = s.as_bytes().iter();
         let bottom_bound = parse_bound(&mut s, b'-')?;
         let upper_bound = parse_bound(&mut s, b' ')?;
         let letter = *s.next().ok_or(())?;
         s.next().ok_or(())?;
         s.next().ok_or(())?; // b": "
-        let password = s.as_slice();
+        let password = s.as_slice().to_owned();
 
         fn parse_bound<'e>(
             iter: &mut impl Iterator<Item = &'e u8>,
@@ -48,12 +48,12 @@ impl<'a> TryFrom<&'a str> for Line<'a> {
 }
 
 #[aoc_generator(day2)]
-pub fn generate(s: &str) -> Vec<Line<'_>> {
+pub fn generate(s: &str) -> Vec<Line> {
     try_from_lines(s).expect("couldn't parse input")
 }
 
 #[aoc(day2, part1)]
-pub fn day2_part1<'a>(values: &'a [Line<'a>]) -> i32 {
+pub fn day2_part1(values: &[Line]) -> i32 {
     values
         .iter()
         .filter(|line| {
