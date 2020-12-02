@@ -53,13 +53,37 @@ pub fn generate(s: &str) -> Vec<Line> {
     try_from_lines(s).expect("couldn't parse input")
 }
 
-#[aoc(day2, part1)]
-pub fn day2_part1(values: &[Line]) -> i32 {
+#[aoc(day2, part1, filter_count)]
+pub fn day2_part1_filter_count(values: &[Line]) -> i32 {
     values
         .iter()
         .filter(|line| {
             let count = line.password.iter().filter(|&&c| c == line.letter).count();
             (line.value1..=line.value2).contains(&count.try_into().expect("letter count too large"))
+        })
+        .count()
+        .try_into()
+        .expect("valid password count too large")
+}
+
+#[aoc(day2, part1, map_sum)]
+pub fn day2_part1_map_sum(values: &[Line]) -> i32 {
+    values
+        .iter()
+        .map(|line| {
+            let count = line.password.iter().map(|&c| (c == line.letter) as u8).sum();
+            (line.value1..=line.value2).contains(&count) as i32
+        })
+        .sum()
+}
+
+#[aoc(day2, part2)]
+pub fn day2_part2(values: &[Line]) -> i32 {
+    values
+        .iter()
+        .filter(|line| {
+            (line.password[(line.value1 - 1) as usize] == line.letter)
+                ^ (line.password[(line.value2 - 1) as usize] == line.letter)
         })
         .count()
         .try_into()
