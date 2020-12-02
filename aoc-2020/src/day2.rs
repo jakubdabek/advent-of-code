@@ -1,11 +1,11 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 use aoc_utils::try_from_lines;
 use std::convert::{TryFrom, TryInto};
-use std::ops::RangeInclusive;
 
 #[derive(Debug)]
 pub struct Line {
-    range: RangeInclusive<u8>,
+    value1: u8,
+    value2: u8,
     letter: u8,
     password: Vec<u8>,
 }
@@ -15,8 +15,8 @@ impl TryFrom<&str> for Line {
 
     fn try_from(s: &str) -> Result<Self, Self::Error> {
         let mut s = s.as_bytes().iter();
-        let bottom_bound = parse_bound(&mut s, b'-')?;
-        let upper_bound = parse_bound(&mut s, b' ')?;
+        let value1 = parse_bound(&mut s, b'-')?;
+        let value2 = parse_bound(&mut s, b' ')?;
         let letter = *s.next().ok_or(())?;
         s.next().ok_or(())?;
         s.next().ok_or(())?; // b": "
@@ -40,7 +40,8 @@ impl TryFrom<&str> for Line {
         }
 
         Ok(Line {
-            range: bottom_bound..=upper_bound,
+            value1,
+            value2,
             letter,
             password,
         })
@@ -58,8 +59,7 @@ pub fn day2_part1(values: &[Line]) -> i32 {
         .iter()
         .filter(|line| {
             let count = line.password.iter().filter(|&&c| c == line.letter).count();
-            line.range
-                .contains(&count.try_into().expect("letter count too large"))
+            (line.value1..=line.value2).contains(&count.try_into().expect("letter count too large"))
         })
         .count()
         .try_into()
