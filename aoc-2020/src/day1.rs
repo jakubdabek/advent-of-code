@@ -56,3 +56,23 @@ pub fn day1_part2(values: &[i32]) -> i32 {
 
     panic!("couldn't find the value")
 }
+
+#[cfg(test)]
+mod tests {
+    const EXAMPLE_DATA: &[i32] = &[1721, 979, 366, 299, 675, 1456];
+
+    #[test]
+    fn day1_part1_premade() {
+        assert_eq!(super::day1_part1_premade(EXAMPLE_DATA), 514579);
+    }
+
+    #[test]
+    fn day1_part1_online() {
+        assert_eq!(super::day1_part1_online(EXAMPLE_DATA), 514579);
+    }
+
+    #[test]
+    fn day1_part2() {
+        assert_eq!(super::day1_part2(EXAMPLE_DATA), 241861950);
+    }
+}

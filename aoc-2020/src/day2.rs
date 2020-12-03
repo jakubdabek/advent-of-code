@@ -2,7 +2,7 @@ use aoc_runner_derive::{aoc, aoc_generator};
 use aoc_utils::try_from_lines;
 use std::convert::{TryFrom, TryInto};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Line {
     value1: u8,
     value2: u8,
@@ -92,4 +92,56 @@ pub fn day2_part2(values: &[Line]) -> i32 {
         .count()
         .try_into()
         .expect("valid password count too large")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Line;
+
+    const EXAMPLE_INPUT: &str = r"1-3 a: abcde
+1-3 b: cdefg
+2-9 c: ccccccccc";
+
+    fn get_example_data() -> Vec<Line> {
+        vec![
+            Line {
+                value1: 1,
+                value2: 3,
+                letter: b'a',
+                password: "abcde".as_bytes().to_owned(),
+            },
+            Line {
+                value1: 1,
+                value2: 3,
+                letter: b'b',
+                password: "cdefg".as_bytes().to_owned(),
+            },
+            Line {
+                value1: 2,
+                value2: 9,
+                letter: b'c',
+                password: "ccccccccc".as_bytes().to_owned(),
+            },
+        ]
+    }
+
+    #[test]
+    fn generate() {
+        assert_eq!(super::generate(EXAMPLE_INPUT), get_example_data());
+    }
+
+    #[test]
+    fn day2_part1_filter_count() {
+        assert_eq!(super::day2_part1_filter_count(&get_example_data()), 2);
+    }
+
+    #[test]
+    fn day2_part1_map_sum() {
+        assert_eq!(super::day2_part1_map_sum(&get_example_data()), 2);
+    }
+
+    #[test]
+    fn day2_part2() {
+        assert_eq!(super::day2_part2(&get_example_data()), 1);
+    }
 }

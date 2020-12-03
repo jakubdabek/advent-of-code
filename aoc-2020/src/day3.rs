@@ -1,6 +1,6 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 use aoc_utils::try_from_lines;
-use std::convert::{TryFrom, TryInto};
+use std::convert::TryFrom;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Field {
@@ -8,7 +8,7 @@ enum Field {
     Tree,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Line {
     slope: Vec<Field>,
 }
@@ -22,7 +22,7 @@ impl TryFrom<&str> for Line {
             .map(|c| match c {
                 b'.' => Ok(Field::Empty),
                 b'#' => Ok(Field::Tree),
-                _ => return Err(()),
+                _ => Err(()),
             })
             .collect::<Result<Vec<_>, _>>()
             .map(|fields| Line { slope: fields })
@@ -59,4 +59,75 @@ pub fn day3_part2(lines: &[Line]) -> usize {
         .iter()
         .map(|&(dx, dy)| count_slope_trees(lines, dx, dy))
         .product()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Line;
+
+    const EXAMPLE_INPUT: &str = r"..##.......
+#...#...#..
+.#....#..#.
+..#.#...#.#
+.#...##..#.
+..#.##.....
+.#.#.#....#
+.#........#
+#.##...#...
+#...##....#
+.#..#...#.#";
+
+    fn get_example_data() -> Vec<Line> {
+        use super::Field::{Empty as E, Tree as T};
+        vec![
+            Line {
+                slope: vec![E, E, T, T, E, E, E, E, E, E, E],
+            },
+            Line {
+                slope: vec![T, E, E, E, T, E, E, E, T, E, E],
+            },
+            Line {
+                slope: vec![E, T, E, E, E, E, T, E, E, T, E],
+            },
+            Line {
+                slope: vec![E, E, T, E, T, E, E, E, T, E, T],
+            },
+            Line {
+                slope: vec![E, T, E, E, E, T, T, E, E, T, E],
+            },
+            Line {
+                slope: vec![E, E, T, E, T, T, E, E, E, E, E],
+            },
+            Line {
+                slope: vec![E, T, E, T, E, T, E, E, E, E, T],
+            },
+            Line {
+                slope: vec![E, T, E, E, E, E, E, E, E, E, T],
+            },
+            Line {
+                slope: vec![T, E, T, T, E, E, E, T, E, E, E],
+            },
+            Line {
+                slope: vec![T, E, E, E, T, T, E, E, E, E, T],
+            },
+            Line {
+                slope: vec![E, T, E, E, T, E, E, E, T, E, T],
+            },
+        ]
+    }
+
+    #[test]
+    fn generate() {
+        assert_eq!(super::generate(EXAMPLE_INPUT), get_example_data());
+    }
+
+    #[test]
+    fn day3_part1() {
+        assert_eq!(super::day3_part1(&get_example_data()), 7);
+    }
+
+    #[test]
+    fn day3_part2() {
+        assert_eq!(super::day3_part2(&get_example_data()), 336);
+    }
 }
