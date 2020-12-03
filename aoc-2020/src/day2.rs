@@ -71,7 +71,11 @@ pub fn day2_part1_map_sum(values: &[Line]) -> i32 {
     values
         .iter()
         .map(|line| {
-            let count = line.password.iter().map(|&c| (c == line.letter) as u8).sum();
+            let count = line
+                .password
+                .iter()
+                .map(|&c| (c == line.letter) as u8)
+                .sum();
             (line.value1..=line.value2).contains(&count) as i32
         })
         .sum()
