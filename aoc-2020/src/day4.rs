@@ -74,11 +74,15 @@ pub fn day4_part2(passports: &[Passport]) -> usize {
                             .by_ref()
                             .take(6)
                             .filter(|c| matches!(c, '0'..='9' | 'a'..='f'))
-                            .count() == 6;
+                            .count()
+                            == 6;
                         let six_digits = chars.next().is_none();
                         starts_with_hash && hex_digits && six_digits
                     }
-                    "ecl" => matches!(value.as_str(), "amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth"),
+                    "ecl" => matches!(
+                        value.as_str(),
+                        "amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth"
+                    ),
                     "pid" => value.len() == 9 && value.chars().all(|c| matches!(c, '0'..='9')),
                     _ => false,
                 };
