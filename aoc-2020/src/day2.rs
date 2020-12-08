@@ -1,3 +1,5 @@
+#![allow(clippy::naive_bytecount)]
+
 use aoc_runner_derive::{aoc, aoc_generator};
 use aoc_utils::try_from_lines;
 use std::convert::{TryFrom, TryInto};

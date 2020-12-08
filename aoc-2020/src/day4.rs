@@ -102,8 +102,10 @@ pub fn day4_part2(passports: &[Passport]) -> usize {
         .iter()
         .filter(|p| {
             let valid = validate(p);
-            // print!("{}: ", if valid { "valid"} else { "invalid"});
-            // println!("{:#?}", p);
+            if false {
+                print!("{}: ", if valid { "valid" } else { "invalid" });
+                println!("{:#?}", p);
+            }
             valid
         })
         .count()
@@ -111,8 +113,6 @@ pub fn day4_part2(passports: &[Passport]) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use super::Passport;
-
     const EXAMPLE_INPUT: &str = r"ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
 
@@ -154,9 +154,9 @@ eyr:2022
 
 iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719";
 
-    fn get_example_data() -> Vec<Passport> {
-        todo!()
-    }
+    // fn get_example_data() -> Vec<Passport> {
+    //     todo!()
+    // }
 
     // #[test]
     // fn generate() {

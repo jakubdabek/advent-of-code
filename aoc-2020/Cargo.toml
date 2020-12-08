@@ -8,6 +8,10 @@ edition = "2018"
 
 [dependencies]
 itertools = "^0.9"
+once_cell = "^1.5"
+regex = "^1.4"
+
+
 aoc-runner = "^0.3"
 aoc-runner-derive = "^0.3"
 aoc-utils = { path = '../aoc-utils' }

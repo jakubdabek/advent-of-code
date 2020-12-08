@@ -96,7 +96,7 @@ pub fn day5_part2(lines: &[Line]) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use super::Line;
+    use std::convert::TryInto;
 
     const EXAMPLE_DATA: &str = r"FBFBBFFRLR
 BFFFBBFRRR
