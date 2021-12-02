@@ -1,7 +1,7 @@
-use aoc_runner_derive::{aoc, aoc_generator};
+use super::{aoc, aoc_generator};
 use aoc_utils::try_from_lines;
-use once_cell::sync::Lazy;
-use regex::Regex;
+use aoc_utils::libs::once_cell::sync::Lazy;
+use aoc_utils::libs::regex::Regex;
 use std::cell::Cell;
 use std::collections::HashMap;
 use std::convert::TryFrom;

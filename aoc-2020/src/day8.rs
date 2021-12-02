@@ -1,4 +1,4 @@
-use aoc_runner_derive::{aoc, aoc_generator};
+use super::{aoc, aoc_generator};
 use aoc_utils::try_from_lines;
 use std::convert::TryFrom;
 
@@ -15,10 +15,10 @@ pub enum Op {
 impl Op {
     fn invert(&self) -> Op {
         use Op::*;
-        match self {
-            &Jmp(v) => Nop(v),
-            &Nop(v) => Jmp(v),
-            op => op.clone(),
+        match *self {
+            Jmp(v) => Nop(v),
+            Nop(v) => Jmp(v),
+            op => op,
         }
     }
 }

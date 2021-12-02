@@ -1,4 +1,4 @@
-use aoc_runner_derive::{aoc, aoc_generator};
+use super::{aoc, aoc_generator};
 use aoc_utils::try_from_lines;
 use std::convert::TryFrom;
 
@@ -84,7 +84,7 @@ pub fn day5_part1(lines: &[Line]) -> usize {
 
 #[aoc(day5, part2)]
 pub fn day5_part2(lines: &[Line]) -> usize {
-    use itertools::Itertools;
+    use aoc_utils::libs::itertools::Itertools;
     lines
         .iter()
         .map(seat_id)
