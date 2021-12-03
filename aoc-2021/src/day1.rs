@@ -20,18 +20,7 @@ pub fn day1_part2(values: &[i32]) -> i32 {
 
 #[cfg(test)]
 mod tests {
-    const EXAMPLE_DATA: &[i32] = &[
-        199,
-        200,
-        208,
-        210,
-        200,
-        207,
-        240,
-        269,
-        260,
-        263,
-    ];
+    const EXAMPLE_DATA: &[i32] = &[199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
 
     #[test]
     fn day1_part1() {

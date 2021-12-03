@@ -7,16 +7,22 @@
       <sourceFolder url="file://$MODULE_DIR$/aoc-2020/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/aoc-2020/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/aoc-2020/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aoc-2020/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/aoc-2021/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/aoc-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/aoc-2021/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/aoc-2021/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/aoc-2021/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aoc-2021/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/aoc-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/aoc-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/aoc-utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/aoc-utils/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/aoc-2020/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/aoc-2021/target" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/aoc-2020/target" />
       <excludeFolder url="file://$MODULE_DIR$/aoc-2021/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/aoc-2020/target" />

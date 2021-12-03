@@ -1,6 +1,6 @@
 use super::{aoc, aoc_generator};
-use aoc_utils::try_from_lines;
 use aoc_utils::libs::*;
+use aoc_utils::try_from_lines;
 use once_cell::sync::Lazy;
 use regex::Regex;
 use std::cell::Cell;
@@ -172,8 +172,8 @@ pub fn day7_part2(lines: &[Line]) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use super::{ContaineeData, Line};
     use super::itertools::Itertools;
+    use super::{ContaineeData, Line};
 
     const EXAMPLE_INPUT: &str = r"light red bags contain 1 bright white bag, 2 muted yellow bags.
 dark orange bags contain 3 bright white bags, 4 muted yellow bags.

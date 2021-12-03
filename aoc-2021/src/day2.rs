@@ -3,8 +3,8 @@ use std::convert::TryFrom;
 use anyhow::Context;
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use aoc_utils::libs::*;
 use anyhow::bail;
+use aoc_utils::libs::*;
 use aoc_utils::try_from_lines;
 
 #[derive(Debug, Clone, Copy, PartialOrd, PartialEq, Eq)]

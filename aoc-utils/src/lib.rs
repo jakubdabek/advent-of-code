@@ -3,10 +3,10 @@ use std::str::FromStr;
 
 pub mod libs {
     pub use anyhow;
-    pub use lexical;
     pub use itertools;
-    pub use regex;
+    pub use lexical;
     pub use once_cell;
+    pub use regex;
 
     pub fn foo() {}
 
@@ -14,11 +14,11 @@ pub mod libs {
     pub use aoc_runner_derive;
 }
 
-pub fn parse_lines<T: FromStr<Err=E>, E>(s: impl AsRef<str>) -> Result<Vec<T>, E> {
+pub fn parse_lines<T: FromStr<Err = E>, E>(s: impl AsRef<str>) -> Result<Vec<T>, E> {
     s.as_ref().lines().map(str::parse).collect()
 }
 
-pub fn try_from_lines<'a, T: TryFrom<&'a str, Error=E>, E>(s: &'a str) -> Result<Vec<T>, E> {
+pub fn try_from_lines<'a, T: TryFrom<&'a str, Error = E>, E>(s: &'a str) -> Result<Vec<T>, E> {
     s.lines().map(T::try_from).collect()
 }
 
