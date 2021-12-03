@@ -2,8 +2,8 @@ use std::cmp::Ordering;
 use std::convert::TryFrom;
 
 use aoc_runner_derive::{aoc, aoc_generator};
+use itertools::Itertools;
 
-use aoc_utils::libs::itertools::Itertools;
 use aoc_utils::libs::*;
 use aoc_utils::try_from_lines;
 
@@ -18,7 +18,6 @@ impl TryFrom<&'_ str> for Data {
     type Error = anyhow::Error;
 
     fn try_from(line: &str) -> Result<Self, Self::Error> {
-        // let val = lexical::parse_with_options::<_, _, {lexical::NumberFormatBuilder::from_radix(2)}>(line, &Default::default())?;
         let mut val = [b'0'; LINE_SIZE];
         val[LINE_SIZE - line.len()..].copy_from_slice(line.as_bytes());
         Ok(Data { val })
@@ -28,7 +27,6 @@ impl TryFrom<&'_ str> for Data {
 #[aoc_generator(day3)]
 pub fn generate(s: &str) -> Vec<Data> {
     try_from_lines(s).expect("couldn't parse input")
-    // s.lines().next().unwrap().len(),
 }
 
 #[aoc(day3, part1)]
@@ -43,7 +41,7 @@ pub fn day3_part1(values: &[Data]) -> u32 {
 
     let common = counts
         .iter()
-        .fold(0, |acc, &b| acc * 2 + (b * 2 > values.len() as u16) as u32);
+        .fold(0, |acc, &c| acc * 2 + (c * 2 > values.len() as u16) as u32);
 
     let leading_zeroes = counts.iter().take_while(|&&x| x == 0).count();
     let uncommon = !common & ((1_u32 << (LINE_SIZE - leading_zeroes)) - 1);
@@ -70,15 +68,6 @@ pub fn day3_part2(values: &[Data]) -> u32 {
         while gas_range.len() > 1 {
             let zeroes = gas_range.partition_point(|d| d.val[index] == b'0');
 
-            println!("{} {}", index, zeroes);
-            println!(
-                "{:#?}",
-                gas_range
-                    .iter()
-                    .map(|d| std::str::from_utf8(&d.val).unwrap())
-                    .collect_vec()
-            );
-
             let ord = (zeroes * 2).cmp(&gas_range.len());
             gas_range = match (rev, ord) {
                 // more common digit or 1s if equal
@@ -102,13 +91,11 @@ pub fn day3_part2(values: &[Data]) -> u32 {
         .val
         .iter()
         .fold(0, |acc, &b| acc * 2 + (b == b'1') as u32);
-    println!("oxygen: {}", oxygen_value);
 
     let mut co2_value = co2
         .val
         .iter()
         .fold(0, |acc, &b| acc * 2 + (b == b'1') as u32);
-    println!("co2: {}", co2_value);
 
     oxygen_value * co2_value
 }
