@@ -2,71 +2,57 @@ use std::cmp::Ordering;
 use std::convert::TryFrom;
 
 use aoc_runner_derive::{aoc, aoc_generator};
-use itertools::Itertools;
 
 use aoc_utils::libs::*;
 use aoc_utils::try_from_lines;
 
-const LINE_SIZE: usize = 12;
-
 #[derive(Debug, Clone, Copy, PartialOrd, PartialEq, Eq, Ord)]
-pub struct Data {
-    val: [u8; LINE_SIZE],
+pub struct Data<'a> {
+    val: &'a str,
 }
 
-impl TryFrom<&'_ str> for Data {
+impl<'a> TryFrom<&'a str> for Data<'a> {
     type Error = anyhow::Error;
 
-    fn try_from(line: &str) -> Result<Self, Self::Error> {
-        let mut val = [b'0'; LINE_SIZE];
-        val[LINE_SIZE - line.len()..].copy_from_slice(line.as_bytes());
-        Ok(Data { val })
+    fn try_from(line: &'a str) -> Result<Self, Self::Error> {
+        Ok(Data { val: line })
     }
 }
 
 #[aoc_generator(day3)]
-pub fn generate(s: &str) -> Vec<Data> {
+pub fn generate<'input>(s: &'input str) -> Vec<Data<'input>> {
     try_from_lines(s).expect("couldn't parse input")
 }
 
 #[aoc(day3, part1)]
-pub fn day3_part1(values: &[Data]) -> u32 {
-    let mut counts = [0_u16; LINE_SIZE];
+pub fn day3_part1(values: &[Data<'_>]) -> u32 {
+    let mut counts = vec![0_u16; values[0].val.len()];
     for d in values {
         counts
             .iter_mut()
-            .zip(d.val)
-            .for_each(|(c, d)| *c += (d == b'1') as u16);
+            .zip(d.val.as_bytes())
+            .for_each(|(c, &d)| *c += (d == b'1') as u16);
     }
 
     let common = counts
         .iter()
         .fold(0, |acc, &c| acc * 2 + (c * 2 > values.len() as u16) as u32);
 
-    let leading_zeroes = counts.iter().take_while(|&&x| x == 0).count();
-    let uncommon = !common & ((1_u32 << (LINE_SIZE - leading_zeroes)) - 1);
+    let uncommon = !common & ((1_u32 << counts.len()) - 1);
 
     common * uncommon
 }
 
 #[aoc(day3, part2)]
-pub fn day3_part2(values: &[Data]) -> u32 {
+pub fn day3_part2(values: &[Data<'_>]) -> u32 {
     let mut values = values.to_owned();
     values.sort_unstable();
 
-    let leading_zeroes = values
-        .last()
-        .unwrap()
-        .val
-        .iter()
-        .take_while(|&&x| x == b'0')
-        .count();
-
-    fn find_rating(mut gas_range: &[Data], leading_zeroes: usize, rev: bool) -> Data {
-        let mut index = leading_zeroes;
+    fn find_rating<'a>(mut gas_range: &[Data<'a>], rev: bool) -> Data<'a> {
+        let mut index = 0;
 
         while gas_range.len() > 1 {
-            let zeroes = gas_range.partition_point(|d| d.val[index] == b'0');
+            let zeroes = gas_range.partition_point(|d| d.val.as_bytes()[index] == b'0');
 
             let ord = (zeroes * 2).cmp(&gas_range.len());
             gas_range = match (rev, ord) {
@@ -84,18 +70,18 @@ pub fn day3_part2(values: &[Data]) -> u32 {
         gas_range[0]
     }
 
-    let oxygen = find_rating(&values, leading_zeroes, false);
-    let co2 = find_rating(&values, leading_zeroes, true);
+    let oxygen = find_rating(&values, false);
+    let co2 = find_rating(&values, true);
 
     let oxygen_value = oxygen
         .val
-        .iter()
-        .fold(0, |acc, &b| acc * 2 + (b == b'1') as u32);
+        .bytes()
+        .fold(0, |acc, b| acc * 2 + (b == b'1') as u32);
 
-    let mut co2_value = co2
+    let co2_value = co2
         .val
-        .iter()
-        .fold(0, |acc, &b| acc * 2 + (b == b'1') as u32);
+        .bytes()
+        .fold(0, |acc, b| acc * 2 + (b == b'1') as u32);
 
     oxygen_value * co2_value
 }
@@ -117,44 +103,20 @@ mod tests {
 00010
 01010"#;
 
-    fn get_example_data() -> Vec<Data> {
+    fn get_example_data() -> Vec<Data<'static>> {
         vec![
-            Data {
-                val: *b"000000000100",
-            },
-            Data {
-                val: *b"000000011110",
-            },
-            Data {
-                val: *b"000000010110",
-            },
-            Data {
-                val: *b"000000010111",
-            },
-            Data {
-                val: *b"000000010101",
-            },
-            Data {
-                val: *b"000000001111",
-            },
-            Data {
-                val: *b"000000000111",
-            },
-            Data {
-                val: *b"000000011100",
-            },
-            Data {
-                val: *b"000000010000",
-            },
-            Data {
-                val: *b"000000011001",
-            },
-            Data {
-                val: *b"000000000010",
-            },
-            Data {
-                val: *b"000000001010",
-            },
+            Data { val: "00100" },
+            Data { val: "11110" },
+            Data { val: "10110" },
+            Data { val: "10111" },
+            Data { val: "10101" },
+            Data { val: "01111" },
+            Data { val: "00111" },
+            Data { val: "11100" },
+            Data { val: "10000" },
+            Data { val: "11001" },
+            Data { val: "00010" },
+            Data { val: "01010" },
         ]
     }
 

@@ -1,3 +1,6 @@
+// cargo-aoc limitation
+#![allow(clippy::needless_lifetimes)]
+
 extern crate aoc_utils;
 
 use aoc_utils::libs::aoc_runner;
