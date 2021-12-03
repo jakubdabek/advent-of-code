@@ -1,9 +1,11 @@
-use aoc_utils::libs::aoc_runner_derive::{aoc, aoc_generator};
-use aoc_utils::lexical_from_lines;
+use aoc_runner_derive::{aoc, aoc_generator};
+
+use aoc_utils::lexical_parse_lines;
+use aoc_utils::libs::*;
 
 #[aoc_generator(day1)]
 pub fn generate(s: &str) -> Vec<i32> {
-    lexical_from_lines(s).expect("couldn't parse input")
+    lexical_parse_lines(s).expect("couldn't parse input")
 }
 
 #[aoc(day1, part1)]

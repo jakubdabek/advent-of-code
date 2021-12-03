@@ -1,8 +1,9 @@
 extern crate aoc_utils;
 
-use aoc_utils::libs::aoc_runner_derive::aoc_lib;
 use aoc_utils::libs::aoc_runner;
+use aoc_utils::libs::aoc_runner_derive::aoc_lib;
 
 pub mod day1;
+pub mod day2;
 
 aoc_lib! { year = 2021 }
