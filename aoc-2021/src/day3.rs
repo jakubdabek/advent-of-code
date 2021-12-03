@@ -3,8 +3,8 @@ use std::convert::TryFrom;
 
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use aoc_utils::libs::*;
 use aoc_utils::libs::itertools::Itertools;
+use aoc_utils::libs::*;
 use aoc_utils::try_from_lines;
 
 const LINE_SIZE: usize = 12;
@@ -41,15 +41,12 @@ pub fn day3_part1(values: &[Data]) -> u32 {
             .for_each(|(c, d)| *c += (d == b'1') as u16);
     }
 
-    let mut common = 0_u32;
-    let mut exp = 1;
-    for &bit in counts.iter().rev() {
-        common += exp * (bit > values.len() as u16 / 2) as u32;
-        exp *= 2;
-    }
+    let common = counts
+        .iter()
+        .fold(0, |acc, &b| acc * 2 + (b * 2 > values.len() as u16) as u32);
 
     let leading_zeroes = counts.iter().take_while(|&&x| x == 0).count();
-    let uncommon = !(common | (!0_u32 << (LINE_SIZE - leading_zeroes)));
+    let uncommon = !common & ((1_u32 << (LINE_SIZE - leading_zeroes)) - 1);
 
     common * uncommon
 }
@@ -82,19 +79,14 @@ pub fn day3_part2(values: &[Data]) -> u32 {
                     .collect_vec()
             );
 
-            let ord = {
-                let ord = zeroes.cmp(&(gas_range.len() / 2));
-                if rev {
-                    ord.reverse()
-                } else {
-                    ord
-                }
-            };
-            gas_range = match ord {
-                Ordering::Less => &gas_range[zeroes..],
-                Ordering::Equal if rev => &gas_range[..zeroes],
-                Ordering::Equal => &gas_range[zeroes..],
-                Ordering::Greater => &gas_range[..zeroes],
+            let ord = (zeroes * 2).cmp(&gas_range.len());
+            gas_range = match (rev, ord) {
+                // more common digit or 1s if equal
+                (false, Ordering::Less | Ordering::Equal) => &gas_range[zeroes..],
+                (false, Ordering::Greater) => &gas_range[..zeroes],
+                // less common digit or 0s if equal
+                (true, Ordering::Less | Ordering::Equal) => &gas_range[..zeroes],
+                (true, Ordering::Greater) => &gas_range[zeroes..],
             };
 
             index += 1;
@@ -106,20 +98,16 @@ pub fn day3_part2(values: &[Data]) -> u32 {
     let oxygen = find_rating(&values, leading_zeroes, false);
     let co2 = find_rating(&values, leading_zeroes, true);
 
-    let mut oxygen_value = 0_u32;
-    let mut exp = 1;
-    for &bit in oxygen.val.iter().rev() {
-        oxygen_value += exp * (bit == b'1') as u32;
-        exp *= 2;
-    }
+    let oxygen_value = oxygen
+        .val
+        .iter()
+        .fold(0, |acc, &b| acc * 2 + (b == b'1') as u32);
     println!("oxygen: {}", oxygen_value);
 
-    let mut co2_value = 0_u32;
-    let mut exp = 1;
-    for &bit in co2.val.iter().rev() {
-        co2_value += exp * (bit == b'1') as u32;
-        exp *= 2;
-    }
+    let mut co2_value = co2
+        .val
+        .iter()
+        .fold(0, |acc, &b| acc * 2 + (b == b'1') as u32);
     println!("co2: {}", co2_value);
 
     oxygen_value * co2_value
