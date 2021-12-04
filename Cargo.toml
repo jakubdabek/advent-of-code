@@ -1,2 +1,5 @@
 [workspace]
 members = ["aoc-20*", "aoc-utils"]
+
+[profile.release]
+overflow-checks = true

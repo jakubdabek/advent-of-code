@@ -1,9 +1,9 @@
 use std::convert::TryFrom;
 
+use anyhow::bail;
 use anyhow::Context;
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use anyhow::bail;
 use aoc_utils::libs::*;
 use aoc_utils::try_from_lines;
 
