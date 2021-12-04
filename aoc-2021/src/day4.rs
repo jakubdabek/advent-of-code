@@ -7,8 +7,8 @@ use anyhow::bail;
 use anyhow::Context;
 use aoc_runner_derive::{aoc, aoc_generator};
 
-use aoc_utils::libs::*;
 use aoc_utils::libs::itertools::Itertools;
+use aoc_utils::libs::*;
 use aoc_utils::try_from_lines;
 
 #[derive(Debug, Clone, PartialOrd, PartialEq, Eq)]
@@ -24,21 +24,18 @@ pub struct Data {
 
 #[aoc_generator(day4)]
 pub fn generate(s: &str) -> Data {
-    let (drawn, boards) = s.split_once('\n').unwrap();
+    let (drawn, boards) = s.split_once("\n\n").unwrap();
     let drawn = drawn.split(',').map(|n| n.parse().unwrap()).collect_vec();
 
     let boards = boards
-        .lines()
-        .chunks(6)
-        .into_iter()
-        .map(|c| {
+        .split("\n\n")
+        .map(|board_str| {
             let mut numbers = [[0; 5]; 5];
-            for (line, row) in c.skip(1).zip(numbers.iter_mut()) {
-                let line: &str = line;
-                line.split_ascii_whitespace()
-                    .zip(row.iter_mut())
-                    .for_each(|(s, n)| *n = s.parse().unwrap());
-            }
+
+            board_str
+                .split_ascii_whitespace()
+                .zip(numbers.iter_mut().flatten())
+                .for_each(|(s, n)| *n = s.parse().unwrap());
 
             Board { numbers }
         })
