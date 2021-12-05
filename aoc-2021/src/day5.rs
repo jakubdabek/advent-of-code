@@ -90,10 +90,17 @@ fn iter_lines(data: &Data, allow_diagonal: bool, f: impl FnMut((i32, i32))) {
     }
 }
 
-fn fill_counts(data: &Data, counts: &mut HashMap<(i32, i32), usize>, allow_diagonal: bool) {
+fn fill_counts(data: &Data, counts: &mut HashMap<(i32, i32), usize>, allow_diagonal: bool) -> i32 {
+    let mut overlapping = 0;
     iter_lines(data, allow_diagonal, |(x, y)| {
-        *counts.entry((x, y)).or_insert(0) += 1;
-    })
+        let entry = counts.entry((x, y)).or_insert(0);
+        *entry += 1;
+        if *entry == 2 {
+            overlapping += 1;
+        }
+    });
+
+    overlapping
 }
 
 fn _print_counts(counts: &HashMap<(i32, i32), usize>) {
@@ -111,25 +118,27 @@ fn _print_counts(counts: &HashMap<(i32, i32), usize>) {
 #[aoc(day5, part1)]
 pub fn day5_part1(data: &[Data]) -> i32 {
     let mut counts = HashMap::new();
+    let mut overlapping = 0;
 
     for d in data.iter() {
-        fill_counts(d, &mut counts, false);
+        overlapping += fill_counts(d, &mut counts, false);
     }
 
     // _print_counts(&counts);
-    counts.values().filter(|&&c| c > 1).count() as _
+    overlapping
 }
 
 #[aoc(day5, part2)]
 pub fn day5_part2(data: &[Data]) -> i32 {
     let mut counts = HashMap::new();
+    let mut overlapping = 0;
 
     for d in data.iter() {
-        fill_counts(d, &mut counts, true);
+        overlapping += fill_counts(d, &mut counts, true);
     }
 
     // _print_counts(&counts);
-    counts.values().filter(|&&c| c > 1).count() as _
+    overlapping
 }
 
 #[cfg(test)]
