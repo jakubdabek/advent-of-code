@@ -1,7 +1,6 @@
 #![allow(unused_imports)]
 
 use std::cmp::Ordering;
-use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::ops::{Range, RangeInclusive};
 
@@ -117,7 +116,7 @@ fn _print_counts(counts: &HashMap<(i32, i32), usize>) {
 
 #[aoc(day5, part1)]
 pub fn day5_part1(data: &[Data]) -> i32 {
-    let mut counts = HashMap::new();
+    let mut counts = HashMap::default();
     let mut overlapping = 0;
 
     for d in data.iter() {
@@ -130,7 +129,7 @@ pub fn day5_part1(data: &[Data]) -> i32 {
 
 #[aoc(day5, part2)]
 pub fn day5_part2(data: &[Data]) -> i32 {
-    let mut counts = HashMap::new();
+    let mut counts = HashMap::default();
     let mut overlapping = 0;
 
     for d in data.iter() {

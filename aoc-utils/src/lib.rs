@@ -8,7 +8,7 @@ pub mod libs {
     pub use once_cell;
     pub use regex;
 
-    pub fn foo() {}
+    pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
 
     pub use aoc_runner;
     pub use aoc_runner_derive;
