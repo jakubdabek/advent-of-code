@@ -2,13 +2,11 @@
 
 use std::cmp::Ordering;
 use std::convert::TryFrom;
-use std::ops::{Range, RangeInclusive};
 
-use anyhow::bail;
 use anyhow::Context;
 use aoc_runner_derive::{aoc, aoc_generator};
+use itertools::Itertools;
 
-use aoc_utils::libs::itertools::Itertools;
 use aoc_utils::libs::*;
 use aoc_utils::try_from_lines;
 
@@ -81,7 +79,9 @@ fn iter_lines(data: &Data, allow_diagonal: bool, f: impl FnMut((Coord, Coord))) 
     }
 
     struct DispatchYs<I, F>(I, F);
-    impl<I2: IntoIterator<Item = Coord>, F: FnMut((Coord, Coord))> DispatchIterator for DispatchYs<I2, F> {
+    impl<I2: IntoIterator<Item = Coord>, F: FnMut((Coord, Coord))> DispatchIterator
+        for DispatchYs<I2, F>
+    {
         fn run<I: IntoIterator<Item = Coord>>(self, i: I) {
             self.0.into_iter().zip(i).for_each(self.1)
         }
@@ -92,7 +92,11 @@ fn iter_lines(data: &Data, allow_diagonal: bool, f: impl FnMut((Coord, Coord))) 
     }
 }
 
-fn fill_counts(data: &Data, counts: &mut HashMap<(Coord, Coord), Count>, allow_diagonal: bool) -> i32 {
+fn fill_counts(
+    data: &Data,
+    counts: &mut HashMap<(Coord, Coord), Count>,
+    allow_diagonal: bool,
+) -> i32 {
     let mut overlapping = 0;
     iter_lines(data, allow_diagonal, |(x, y)| {
         let entry = counts.entry((x, y)).or_insert(0);
@@ -117,30 +121,26 @@ fn _print_counts(counts: &HashMap<(Coord, Coord), Count>) {
     }
 }
 
-#[aoc(day5, part1)]
-pub fn day5_part1(data: &[Data]) -> i32 {
+fn day5(data: &[Data], allow_diagonal: bool) -> i32 {
     let mut counts = HashMap::default();
     let mut overlapping = 0;
 
     for d in data.iter() {
-        overlapping += fill_counts(d, &mut counts, false);
+        overlapping += fill_counts(d, &mut counts, allow_diagonal);
     }
 
     // _print_counts(&counts);
     overlapping
 }
 
+#[aoc(day5, part1)]
+pub fn day5_part1(data: &[Data]) -> i32 {
+    day5(data, false)
+}
+
 #[aoc(day5, part2)]
 pub fn day5_part2(data: &[Data]) -> i32 {
-    let mut counts = HashMap::default();
-    let mut overlapping = 0;
-
-    for d in data.iter() {
-        overlapping += fill_counts(d, &mut counts, true);
-    }
-
-    // _print_counts(&counts);
-    overlapping
+    day5(data, true)
 }
 
 #[cfg(test)]
