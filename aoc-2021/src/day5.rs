@@ -1,5 +1,6 @@
 #![allow(unused_imports)]
 
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 use std::ops::{Range, RangeInclusive};
@@ -52,54 +53,47 @@ pub fn generate(s: &str) -> Vec<Data> {
     try_from_lines(s).expect("couldn't parse input")
 }
 
-fn range_incl(a: i32, b: i32) -> RangeInclusive<i32> {
-    (a.min(b)..=b.max(a))
+trait DispatchIterator {
+    fn run<I: IntoIterator<Item = i32>>(self, i: I);
 }
 
-fn fill_axis(
-    counts: &mut HashMap<(i32, i32), usize>,
-    coords: impl FnOnce() -> ((i32, i32), (i32, i32)),
-    entry: impl Fn(i32, i32) -> (i32, i32),
-) {
-    let ((a1, b1), (a2, b2)) = coords();
-    assert_eq!(a1, a2);
-
-    for b in range_incl(b1, b2) {
-        *counts.entry(entry(a1, b)).or_insert(0) += 1;
+fn dispatch_range(from: i32, to: i32, dispatch: impl DispatchIterator) {
+    match from.cmp(&to) {
+        Ordering::Less => dispatch.run(from..=to),
+        Ordering::Equal => dispatch.run(std::iter::repeat(from)),
+        Ordering::Greater => dispatch.run((to..=from).rev()),
     }
 }
 
-fn iter_diagonal(data: &Data, f: impl FnMut((i32, i32))) {
+fn iter_lines(data: &Data, allow_diagonal: bool, f: impl FnMut((i32, i32))) {
     let &Data {
         from: Point { x: x1, y: y1 },
         to: Point { x: x2, y: y2 },
     } = data;
-    match (x1 < x2, y1 < y2) {
-        (true, true) => (x1..=x2).zip(y1..=y2).for_each(f),
-        (true, false) => (x1..=x2).zip((y2..=y1).rev()).for_each(f),
-        (false, true) => (x2..=x1).rev().zip(y1..=y2).for_each(f),
-        (false, false) => (x2..=x1).rev().zip((y2..=y1).rev()).for_each(f),
+
+    struct DispatchXs<F>(i32, i32, F);
+    impl<F: FnMut((i32, i32))> DispatchIterator for DispatchXs<F> {
+        fn run<I: IntoIterator<Item = i32>>(self, i: I) {
+            dispatch_range(self.0, self.1, DispatchYs(i, self.2))
+        }
+    }
+
+    struct DispatchYs<I, F>(I, F);
+    impl<I2: IntoIterator<Item = i32>, F: FnMut((i32, i32))> DispatchIterator for DispatchYs<I2, F> {
+        fn run<I: IntoIterator<Item = i32>>(self, i: I) {
+            self.0.into_iter().zip(i).for_each(self.1)
+        }
+    }
+
+    if allow_diagonal || (x1 == x2 || y1 == y2) {
+        dispatch_range(x1, x2, DispatchXs(y1, y2, f));
     }
 }
 
 fn fill_counts(data: &Data, counts: &mut HashMap<(i32, i32), usize>, allow_diagonal: bool) {
-    if data.from.x == data.to.x {
-        fill_axis(
-            counts,
-            || ((data.from.x, data.from.y), (data.to.x, data.to.y)),
-            |a, b| (a, b),
-        );
-    } else if data.from.y == data.to.y {
-        fill_axis(
-            counts,
-            || ((data.from.y, data.from.x), (data.to.y, data.to.x)),
-            |a, b| (b, a),
-        );
-    } else if allow_diagonal {
-        iter_diagonal(data, |(x, y)| {
-            *counts.entry((x, y)).or_insert(0) += 1;
-        });
-    }
+    iter_lines(data, allow_diagonal, |(x, y)| {
+        *counts.entry((x, y)).or_insert(0) += 1;
+    })
 }
 
 fn _print_counts(counts: &HashMap<(i32, i32), usize>) {
