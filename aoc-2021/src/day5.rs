@@ -12,10 +12,13 @@ use aoc_utils::libs::itertools::Itertools;
 use aoc_utils::libs::*;
 use aoc_utils::try_from_lines;
 
+type Coord = u16;
+type Count = u8;
+
 #[derive(Debug, Clone, Copy, PartialOrd, PartialEq, Eq)]
 struct Point {
-    x: i32,
-    y: i32,
+    x: Coord,
+    y: Coord,
 }
 
 #[derive(Debug, Clone, Copy, PartialOrd, PartialEq, Eq)]
@@ -25,7 +28,7 @@ pub struct Data {
 }
 
 impl Data {
-    fn new(x1: i32, y1: i32, x2: i32, y2: i32) -> Self {
+    fn new(x1: Coord, y1: Coord, x2: Coord, y2: Coord) -> Self {
         Data {
             from: Point { x: x1, y: y1 },
             to: Point { x: x2, y: y2 },
@@ -53,10 +56,10 @@ pub fn generate(s: &str) -> Vec<Data> {
 }
 
 trait DispatchIterator {
-    fn run<I: IntoIterator<Item = i32>>(self, i: I);
+    fn run<I: IntoIterator<Item = Coord>>(self, i: I);
 }
 
-fn dispatch_range(from: i32, to: i32, dispatch: impl DispatchIterator) {
+fn dispatch_range(from: Coord, to: Coord, dispatch: impl DispatchIterator) {
     match from.cmp(&to) {
         Ordering::Less => dispatch.run(from..=to),
         Ordering::Equal => dispatch.run(std::iter::repeat(from)),
@@ -64,22 +67,22 @@ fn dispatch_range(from: i32, to: i32, dispatch: impl DispatchIterator) {
     }
 }
 
-fn iter_lines(data: &Data, allow_diagonal: bool, f: impl FnMut((i32, i32))) {
+fn iter_lines(data: &Data, allow_diagonal: bool, f: impl FnMut((Coord, Coord))) {
     let &Data {
         from: Point { x: x1, y: y1 },
         to: Point { x: x2, y: y2 },
     } = data;
 
-    struct DispatchXs<F>(i32, i32, F);
-    impl<F: FnMut((i32, i32))> DispatchIterator for DispatchXs<F> {
-        fn run<I: IntoIterator<Item = i32>>(self, i: I) {
+    struct DispatchXs<F>(Coord, Coord, F);
+    impl<F: FnMut((Coord, Coord))> DispatchIterator for DispatchXs<F> {
+        fn run<I: IntoIterator<Item = Coord>>(self, i: I) {
             dispatch_range(self.0, self.1, DispatchYs(i, self.2))
         }
     }
 
     struct DispatchYs<I, F>(I, F);
-    impl<I2: IntoIterator<Item = i32>, F: FnMut((i32, i32))> DispatchIterator for DispatchYs<I2, F> {
-        fn run<I: IntoIterator<Item = i32>>(self, i: I) {
+    impl<I2: IntoIterator<Item = Coord>, F: FnMut((Coord, Coord))> DispatchIterator for DispatchYs<I2, F> {
+        fn run<I: IntoIterator<Item = Coord>>(self, i: I) {
             self.0.into_iter().zip(i).for_each(self.1)
         }
     }
@@ -89,7 +92,7 @@ fn iter_lines(data: &Data, allow_diagonal: bool, f: impl FnMut((i32, i32))) {
     }
 }
 
-fn fill_counts(data: &Data, counts: &mut HashMap<(i32, i32), usize>, allow_diagonal: bool) -> i32 {
+fn fill_counts(data: &Data, counts: &mut HashMap<(Coord, Coord), Count>, allow_diagonal: bool) -> i32 {
     let mut overlapping = 0;
     iter_lines(data, allow_diagonal, |(x, y)| {
         let entry = counts.entry((x, y)).or_insert(0);
@@ -102,7 +105,7 @@ fn fill_counts(data: &Data, counts: &mut HashMap<(i32, i32), usize>, allow_diago
     overlapping
 }
 
-fn _print_counts(counts: &HashMap<(i32, i32), usize>) {
+fn _print_counts(counts: &HashMap<(Coord, Coord), Count>) {
     let (x_max, y_max) = counts.keys().fold((0, 0), |(x_max, y_max), &(x, y)| {
         (x_max.max(x), y_max.max(y))
     });
