@@ -89,6 +89,7 @@ const LOOKUP: [[bool; 7]; 10] = [
     [T, T, T, T, F, T, T], // 9
 ];
 
+#[allow(clippy::many_single_char_names)]
 #[aoc(day8, part2)]
 pub fn day8_part2(data: &[Data<'_>]) -> i32 {
     let mut rest = Vec::with_capacity(6);
