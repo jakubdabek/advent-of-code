@@ -11,7 +11,7 @@ use itertools::izip;
 use itertools::Itertools;
 
 use aoc_utils::libs::*;
-use aoc_utils::{for_neighbours, try_from_lines};
+use aoc_utils::{grids::for_neighbours_4, try_from_lines};
 
 pub type Data<'a> = &'a str;
 
@@ -113,7 +113,7 @@ pub fn day9_part2(data: &[Data<'_>]) -> i32 {
                 }
                 _ => unreachable!(),
             }
-            for_neighbours(current, (width, height), |next| {
+            for_neighbours_4(current, (width, height), |next| {
                 queue.push_back(next);
             });
         }
