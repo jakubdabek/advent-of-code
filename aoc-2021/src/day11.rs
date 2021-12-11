@@ -36,30 +36,29 @@ fn simulate_flashes(data: &[Data], stop_after_synchronize: bool) -> i32 {
             print_grid(&data, print_digit);
             println!();
         }
-        while let Some(xy) = position_in_grid(&data, |&d| d == 9) {
+        // increment all by 1
+        data.iter_mut().flatten().for_each(|d| match d {
+            d @ 0..=9 => *d += 1,
+            _ => unreachable!(),
+        });
+
+        // flash, charge adjacent, flash etc.
+        assert!(queue.is_empty());
+        while let Some(xy) = position_in_grid(&data, |&d| d == 10) {
             queue.push_back(xy);
             while let Some((x, y)) = queue.pop_front() {
                 match &mut data[y][x] {
-                    power @ 9 => {
+                    power @ 10 => {
                         for_neighbours_8((x, y), wh, |pos| queue.push_back(pos));
                         flashes += 1;
-                        *power = 10;
+                        *power = 0;
                     }
-                    10 => {}
-                    power => *power += 1,
+                    0 => {}
+                    power @ 1..=9 => *power += 1,
+                    _ => unreachable!(),
                 }
             }
         }
-        #[cfg(debug_assertions)]
-        if iter % 10 == 0 {
-            print_grid(&data, print_digit);
-            println!();
-        }
-        data.iter_mut().flatten().for_each(|d| match d {
-            d @ 10 => *d = 0,
-            9 => unreachable!(),
-            d => *d += 1,
-        });
 
         iter += 1;
         if stop_after_synchronize && data.iter().flatten().all(|&d| d == 0) {
