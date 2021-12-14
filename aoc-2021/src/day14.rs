@@ -8,7 +8,7 @@ use aoc_runner_derive::{aoc, aoc_generator};
 use itertools::Itertools;
 
 use aoc_utils::libs::*;
-use aoc_utils::try_from_lines;
+use aoc_utils::*;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Data {
@@ -47,7 +47,7 @@ pub fn generate(s: &str) -> Data {
     }
 }
 
-fn print_freqs(data: &Data) {
+fn _print_freqs(data: &Data) {
     for (i, p) in data.polymer.iter().enumerate() {
         println!("{}: {:?}", (i as u8 + b'A') as char, p);
     }
@@ -58,11 +58,9 @@ fn polymerize(data: &Data, steps: usize) -> u64 {
     let mut data = data.clone();
 
     for _step in 0..steps {
-        #[allow(clippy::clone_on_copy)]
-        let mut new_polymer = data.polymer.clone();
+        let mut new_polymer = data.polymer.make_default();
         for &((p1, p2), insert) in data.rules.iter() {
             let [p1, p2, insert] = [p1, p2, insert].map(|l| l as usize);
-            new_polymer[p1][p2] -= data.polymer[p1][p2];
             new_polymer[p1][insert] += data.polymer[p1][p2];
             new_polymer[insert][p2] += data.polymer[p1][p2]
         }
@@ -71,13 +69,13 @@ fn polymerize(data: &Data, steps: usize) -> u64 {
         #[cfg(debug_assertions)]
         {
             println!("After step {}", _step + 1);
-            print_freqs(&data);
+            _print_freqs(&data);
         }
     }
 
     #[cfg(debug_assertions)]
     {
-        print_freqs(&data);
+        _print_freqs(&data);
 
         let mut freq = data
             .polymer

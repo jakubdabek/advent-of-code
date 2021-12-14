@@ -29,3 +29,13 @@ pub fn try_from_lines<'a, T: TryFrom<&'a str, Error = E>, E>(s: &'a str) -> Resu
 pub fn lexical_parse_lines<T: lexical::FromLexical>(s: impl AsRef<str>) -> lexical::Result<Vec<T>> {
     s.as_ref().lines().map(lexical::parse).collect()
 }
+
+pub trait DefaultExt {
+    fn make_default(&self) -> Self;
+}
+
+impl<T: Default> DefaultExt for T {
+    fn make_default(&self) -> Self {
+        T::default()
+    }
+}

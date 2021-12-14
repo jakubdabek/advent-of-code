@@ -149,6 +149,7 @@ fold along x=5"#;
     }
 
     #[test]
+    #[ignore]
     fn day13_part2() {
         assert_eq!(super::day13_part2(&get_example_data()), "O".to_owned());
     }
