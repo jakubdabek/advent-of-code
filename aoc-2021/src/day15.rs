@@ -106,6 +106,12 @@ mod tests {
 1293138521
 2311944581"#;
 
+    const EXAMPLE_INPUT2: &str = r#"19999
+19999
+19111
+19191
+11191"#;
+
     fn get_example_data() -> Vec<Data<'static>> {
         vec![
             "1163751742",
@@ -121,14 +127,26 @@ mod tests {
         ]
     }
 
+    fn get_example_data2() -> Vec<Data<'static>> {
+        vec![
+            "19999",
+            "19999",
+            "19111",
+            "19191",
+            "11191",
+        ]
+    }
+
     #[test]
     fn generate() {
         assert_eq!(super::generate(EXAMPLE_INPUT), get_example_data());
+        assert_eq!(super::generate(EXAMPLE_INPUT2), get_example_data2());
     }
 
     #[test]
     fn day15_part1() {
         assert_eq!(super::day15_part1(&get_example_data()), 40);
+        assert_eq!(super::day15_part1(&get_example_data2()), 12);
     }
 
     #[test]
