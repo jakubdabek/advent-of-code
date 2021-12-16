@@ -8,6 +8,8 @@ pub mod libs {
     pub use lexical;
     pub use once_cell;
     pub use regex;
+    pub use bitvec;
+    pub use hex;
 
     pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
 
@@ -15,6 +17,12 @@ pub mod libs {
     pub use aoc_runner_derive;
 }
 
+#[macro_export]
+macro_rules! debug_println {
+    ($($tt:tt)*) => { #[cfg(debug_assertions)] { println!($($tt)*); } };
+}
+
+pub mod parse;
 pub mod structs;
 pub mod grids;
 
