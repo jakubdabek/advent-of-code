@@ -48,8 +48,9 @@ pub fn day17_part1(data: &Data) -> i32 {
 
 #[aoc(day17, part2)]
 pub fn day17_part2(data: &Data) -> i32 {
+    let start = ((2 * data.x.start()) as f32).sqrt().floor() as i32;
     (-500..500)
-        .flat_map(|vy0| (-500..=500).map(move |vx0: i32| (vx0, vy0)))
+        .flat_map(|vy0| (start..=data.x.end() + 1).map(move |vx0: i32| (vx0, vy0)))
         .filter_map(|(vx0, vy0)| {
             let (mut vx, mut vy) = (vx0, vy0);
             std::iter::successors(Some((0, 0)), |(x, y)| {
