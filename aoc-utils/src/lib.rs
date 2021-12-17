@@ -38,6 +38,12 @@ pub fn lexical_parse_lines<T: lexical::FromLexical>(s: impl AsRef<str>) -> lexic
     s.as_ref().lines().map(lexical::parse).collect()
 }
 
+pub trait Ext: Sized {
+    fn inspect_anything(self, f: impl FnOnce(&Self)) -> Self { f(&self); self }
+}
+
+impl<T> Ext for T {}
+
 pub trait DefaultExt {
     fn make_default(&self) -> Self;
 }
