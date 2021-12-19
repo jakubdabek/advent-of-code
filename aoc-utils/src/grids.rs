@@ -16,7 +16,9 @@ pub fn print_digit(x: &u8) {
         10 => print!("*"),
         11 => print!("@"),
         12 => print!("#"),
-        _ => print!("+"),
+        254 => print!("-"),
+        255 => print!("+"),
+        _ => print!("%"),
     }
 }
 

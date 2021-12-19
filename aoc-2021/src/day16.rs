@@ -12,7 +12,7 @@ use itertools::Either;
 use itertools::Itertools;
 
 use aoc_utils::libs::*;
-use aoc_utils::{try_from_lines, debug_println};
+use aoc_utils::{try_from_lines, debug_do};
 
 pub type Data = Vec<u8>;
 
@@ -25,7 +25,7 @@ type BS = BitSlice<u8, Msb0>;
 type ResInt = u64;
 
 fn parse_packet<'a>(data: &'a BS, version_sum: &mut ResInt) -> (&'a BS, ResInt) {
-    debug_println!("* * parse_packet({:?})", data);
+    debug_do!(println!("* * parse_packet({:?})", data));
     let version = data[0..3].load_be::<u8>();
     let type_id = data[3..6].load_be::<u8>();
     let data = &data[6..];
@@ -64,13 +64,13 @@ fn parse_packet<'a>(data: &'a BS, version_sum: &mut ResInt) -> (&'a BS, ResInt) 
 }
 
 fn parse_literal(data: &BS) -> (&BS, ResInt) {
-    debug_println!("* * * parse_literal({:?})", data);
+    debug_do!(println!("* * * parse_literal({:?})", data));
     let (value, chunks_processed) = data
         .chunks_exact(5)
         .enumerate()
         .try_fold(0, |acc, (i, chunk)| {
             let num = (acc << 4) + chunk[1..5].load_be::<u8>() as ResInt;
-            debug_println!("* * * parse_literal(..): {} {:?}", num, &chunk[1..5]);
+            debug_do!(println!("* * * parse_literal(..): {} {:?}", num, &chunk[1..5]));
             if chunk[0] {
                 Ok(num)
             } else {
@@ -79,7 +79,7 @@ fn parse_literal(data: &BS) -> (&BS, ResInt) {
         })
         .unwrap_err();
 
-    debug_println!("* * * parse_literal(..) = {}", value);
+    debug_do!(println!("* * * parse_literal(..) = {}", value));
     (&data[chunks_processed * 5..], value)
 }
 
@@ -89,15 +89,15 @@ fn parse_operator<'a, T>(
     mut init: T,
     mut fold: impl FnMut(T, ResInt) -> T,
 ) -> (&'a BS, T) {
-    debug_println!("* * * parse_operator({:?})", data);
+    debug_do!(println!("* * * parse_operator({:?})", data));
 
     let (length_type_id, data) = data.split_first().unwrap();
     match *length_type_id {
         false => {
             let (length, data) = data.split_at(15);
-            debug_println!("* * * * {:?}", length);
+            debug_do!(println!("* * * * {:?}", length));
             let length = length.load_be::<u16>() as usize;
-            debug_println!("* * * * {:?}", length);
+            debug_do!(println!("* * * * {:?}", length));
 
             let (mut inner_data, data) = data.split_at(length);
             while !inner_data.is_empty() {
@@ -126,7 +126,7 @@ fn parse_operator<'a, T>(
 
 #[aoc(day16, part1)]
 pub fn day16_part1(data: &Data) -> ResInt {
-    debug_println!("# part1({})", hex::encode(data));
+    debug_do!(println!("# part1({})", hex::encode(data)));
     let bits = data.view_bits::<Msb0>();
     let mut version_sum = 0;
     let bits = parse_packet(bits, &mut version_sum).0;
@@ -136,7 +136,7 @@ pub fn day16_part1(data: &Data) -> ResInt {
 
 #[aoc(day16, part2)]
 pub fn day16_part2(data: &Data) -> ResInt {
-    debug_println!("# part2({})", hex::encode(data));
+    debug_do!(println!("# part2({})", hex::encode(data)));
     let bits = data.view_bits::<Msb0>();
     let mut version_sum = 0;
     let (bits, value) = parse_packet(bits, &mut version_sum);

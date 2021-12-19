@@ -18,8 +18,8 @@ pub mod libs {
 }
 
 #[macro_export]
-macro_rules! debug_println {
-    ($($tt:tt)*) => { #[cfg(debug_assertions)] { println!($($tt)*); } };
+macro_rules! debug_do {
+    ($($tt:tt)*) => { #[cfg(debug_assertions)] { $($tt)* } };
 }
 
 pub mod parse;
